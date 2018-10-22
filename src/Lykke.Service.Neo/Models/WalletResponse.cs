@@ -1,11 +1,17 @@
-﻿namespace Lykke.Service.Neo.Models
-{
-    public class WalletResponse
-    {
-        public byte[] PrivateKey { get; set; }
+﻿using System.Runtime.Serialization;
 
+namespace Lykke.Service.Neo.Models
+{
+    [DataContract]
+    public class WalletCreationResponse
+    {
+        [DataMember(Name = "publicAddress")]
         public string PublicAddress { get; set; }
-        public string FromAddressContext { get; set; }
-        public string Password { get; set; }
+
+        [DataMember(Name = "privateKey")]
+        public string PrivateKey { get; set; }
+
+        [DataMember(Name = "addressContext")]
+        public string AddressContext { get; set; }
     }
 }

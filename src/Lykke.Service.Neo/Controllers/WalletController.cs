@@ -1,34 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Lykke.Service.Neo.Core.Services;
+﻿using System.Security.Cryptography;
 using Lykke.Service.Neo.Models;
 using Microsoft.AspNetCore.Mvc;
-using Neo;
+using Neo.SmartContract;
+using Neo.Wallets;
 
 namespace Lykke.Service.Neo.Controllers
 {    
     [Route("api/[controller]")]
     public class WalletController : Controller
     {
-        private readonly INeoService _neoService;
-
-        public WalletController(INeoService neoService)
-        {
-            _neoService = neoService;
-        }
 
         [HttpPost]
-        public WalletResponse Post([Required]string walletName, string fromAddressContext)
+        public WalletCreationResponse CreateWallet()
         {
-            var password = _neoService.GeneratePassword();
-            var walletAccount = _neoService.CreateWalletAccount(password: password, walletName: walletName); 
-
-            return new WalletResponse()
+            using (var key = CngKey.Create(CngAlgorithm.ECDsaP256, null, new CngKeyCreationParameters { ExportPolicy = CngExportPolicies.AllowPlaintextArchiving }))
             {
-                PrivateKey = walletAccount.GetKey().PrivateKey,
-                PublicAddress = walletAccount.Address,
-                FromAddressContext = fromAddressContext,
-                Password= password
-            };
+                var privateKey = key.Export(CngKeyBlobFormat.EccPrivateBlob);
+                var account = new KeyPair(privateKey);
+
+                return new WalletCreationResponse
+                {
+                    AddressContext = null,
+                    PrivateKey = account.Export(),
+                    PublicAddress = Contract.CreateSignatureContract(account.PublicKey).Address
+                };
+            }
         }
     }
 }

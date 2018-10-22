@@ -2,6 +2,6 @@
 {
     public class NeoSettings
     {
-        public DbSettings Db { get; set; }
+        public string Network { get; set; }
     }
 }

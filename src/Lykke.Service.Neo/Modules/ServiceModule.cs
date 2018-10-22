@@ -13,25 +13,16 @@ namespace Lykke.Service.Neo.Modules
     {
         private readonly IReloadingManager<NeoSettings> _settings;
         private readonly ILog _log;
-        // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
-        private readonly IServiceCollection _services;
 
         public ServiceModule(IReloadingManager<NeoSettings> settings, ILog log)
         {
             _settings = settings;
             _log = log;
 
-            _services = new ServiceCollection();
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            // TODO: Do not register entire settings in container, pass necessary settings to services which requires them
-            // ex:
-            //  builder.RegisterType<QuotesPublisher>()
-            //      .As<IQuotesPublisher>()
-            //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
-
             builder.RegisterInstance(_log)
                 .As<ILog>()
                 .SingleInstance();
@@ -45,15 +36,6 @@ namespace Lykke.Service.Neo.Modules
 
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
-
-            // TODO: Add your dependencies here
-            var connectionStringManager = _settings.ConnectionString(x => x.Db.DataConnString);
-
-            builder.RegisterType<NeoService>()
-                .As<INeoService>()
-                .SingleInstance();
-
-            builder.Populate(_services);
         }
     }
 }

@@ -23,15 +23,6 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   
   <ItemGroup>
     <None Update="Dockerfile">
@@ -60,7 +51,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Lykke.Service.Neo.AzureRepositories\Lykke.Service.Neo.Sign.AzureRepositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.Neo.Core\Lykke.Service.Neo.Sign.Core.csproj" />
     <ProjectReference Include="..\Lykke.Service.Neo.Services\Lykke.Service.Neo.Sign.Services.csproj" />
   </ItemGroup>

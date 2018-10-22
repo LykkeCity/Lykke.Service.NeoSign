@@ -22,6 +22,7 @@ namespace Lykke.Service.NeoSign
             return services.BuildServiceProvider<AppSettings>(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
+
   
                 options.Logs = logs =>
                 {

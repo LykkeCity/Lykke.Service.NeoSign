@@ -4,6 +4,8 @@ using Lykke.Service.NeoSign.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using AsyncFriendlyStackTrace;
+using Lykke.Common.Api.Contract.Responses;
 
 namespace Lykke.Service.NeoSign
 {
@@ -12,7 +14,7 @@ namespace Lykke.Service.NeoSign
     {
         private readonly LykkeSwaggerOptions _swaggerOptions = new LykkeSwaggerOptions
         {
-            ApiTitle = "NeoSign API",
+            ApiTitle = "NeoSign",
             ApiVersion = "v1"
         };
 
@@ -37,6 +39,7 @@ namespace Lykke.Service.NeoSign
             app.UseLykkeConfiguration(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
+                options.DefaultErrorHandler = ex => new ErrorResponse { ErrorMessage = ex.ToAsyncString() };
             });
         }
     }

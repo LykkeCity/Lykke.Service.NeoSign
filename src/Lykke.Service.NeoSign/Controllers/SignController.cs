@@ -4,6 +4,7 @@ using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainApi.Contract.Transactions;
 using Microsoft.AspNetCore.Mvc;
+using Neo;
 using Neo.Cryptography;
 using Neo.SmartContract;
 using Neo.Wallets;
@@ -24,7 +25,8 @@ namespace Lykke.Service.NeoSign.Controllers
 
             try
             {
-                var privateKey = new KeyPair(request.PrivateKeys.Single().Base58CheckDecode());
+                var privateKey = new KeyPair(
+                    Wallet.GetPrivateKeyFromWIF(request.PrivateKeys.Single()));
 
                 var sc = Contract.CreateSignatureContract(privateKey.PublicKey);
 

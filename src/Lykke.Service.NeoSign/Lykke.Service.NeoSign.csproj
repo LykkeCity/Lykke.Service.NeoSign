@@ -27,11 +27,10 @@
     <PackageReference Include="Lykke.Service.BlockchainApi.Contract" Version="13.2.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
-    <PackageReference Include="Neo" Version="2.9.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lykke.Service.NeoSign.Domain\Lykke.Service.NeoSign.Domain.csproj" />
-    <ProjectReference Include="..\Lykke.Service.NeoSign.DomainServices\Lykke.Service.NeoSign.DomainServices.csproj" />
+    <PackageReference Include="Neo" Version="2.9.2" />
+    <PackageReference Include="NeoModules.Core" Version="1.0.0" />
+    <PackageReference Include="NeoModules.KeyPairs" Version="0.0.6" />
+    <PackageReference Include="NeoModules.NEP6" Version="0.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />

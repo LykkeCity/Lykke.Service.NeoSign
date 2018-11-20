@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
+using Common;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainApi.Contract.Transactions;
+using Lykke.Service.NeoApi.Helpers.Transaction;
 using Microsoft.AspNetCore.Mvc;
-using Neo;
-using Neo.Cryptography;
-using Neo.SmartContract;
-using Neo.Wallets;
+using NeoModules.Core.KeyPair;
+using NeoModules.NEP6.Models;
+using NeoModules.NEP6.Transactions;
 
 
 namespace Lykke.Service.NeoSign.Controllers
@@ -19,31 +20,32 @@ namespace Lykke.Service.NeoSign.Controllers
         [HttpPost]
         public IActionResult Sign([FromBody] SignTransactionRequest request)
         {
-            
             if (!ModelState.IsValid)
                 return BadRequest(ErrorResponseFactory.Create(ModelState));
 
             try
             {
-                var privateKey = new KeyPair(
-                    Wallet.GetPrivateKeyFromWIF(request.PrivateKeys.Single()));
+                var tx = TransactionSerializer.Deserialize(request.TransactionContext);
 
-                var sc = Contract.CreateSignatureContract(privateKey.PublicKey);
+                var keyPair = new KeyPair(Wallet.GetPrivateKeyFromWif(request.PrivateKeys.Single()));
 
-                var context = ContractParametersContext.FromJson(request.TransactionContext);
+                var signature = Transaction.Sign(keyPair, tx, false);
+           
+                var invocationScript = NeoModules.Core.Helper.HexToBytes(("40" + signature.ToHexString()));
+                var verificationScript = Helper.CreateSignatureRedeemScript(keyPair.PublicKey);
 
-                var signature = context.Verifiable.Sign(privateKey);
-
-                var isSigned = context.AddSignature(sc, privateKey.PublicKey, signature);
-
-                if (!isSigned)
+                tx.Witnesses = new[]
                 {
-                    return BadRequest(ErrorResponse.Create("Unable to sign transaction using provided private key"));
-                }
+                    new Witness
+                    {
+                        InvocationScript = invocationScript,
+                        VerificationScript = verificationScript
+                    }
+                };
 
                 return Ok(new SignedTransactionResponse
                 {
-                    SignedTransaction = context.ToJson().ToString()
+                    SignedTransaction = TransactionSerializer.Serialize(tx)
                 });
             }
 

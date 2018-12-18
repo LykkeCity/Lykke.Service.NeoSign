@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Lykke.Sdk;
+using Lykke.Service.NeoSign.Lifetime;
 using Lykke.Service.NeoSign.Settings;
 using Lykke.SettingsReader;
 
@@ -15,7 +17,8 @@ namespace Lykke.Service.NeoSign.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            // Do not register entire settings in container, pass necessary settings to services which requires them
+            builder.RegisterType<StartupManager>()
+                .As<IStartupManager>();
         }
     }
 }

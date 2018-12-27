@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Lykke.Service.BlockchainApi.Contract.Wallets;
 using Microsoft.AspNetCore.Mvc;
 using Neo.SmartContract;
@@ -13,18 +14,20 @@ namespace Lykke.Service.NeoSign.Controllers
         [HttpPost]
         public WalletResponse CreateWallet()
         {
-            using (var key = CngKey.Create(CngAlgorithm.ECDsaP256, 
-                null, 
-                new CngKeyCreationParameters { ExportPolicy = CngExportPolicies.AllowPlaintextArchiving }))
-            {
-                var privateKey = new KeyPair(key.Export(CngKeyBlobFormat.EccPrivateBlob));
+            var randomData = new byte[32];
 
-                return new WalletResponse
-                {
-                    AddressContext = null,
-                    PrivateKey = privateKey.Export(),
-                    PublicAddress = Contract.CreateSignatureContract(privateKey.PublicKey).Address
-                };
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomData);
+            }
+
+            var privateKey = new KeyPair(randomData);
+
+            return new WalletResponse
+            {
+                AddressContext = null,
+                PrivateKey = privateKey.Export(),
+                PublicAddress = Contract.CreateSignatureContract(privateKey.PublicKey).Address
             };
         }
     }

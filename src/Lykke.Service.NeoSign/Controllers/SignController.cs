@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AsyncFriendlyStackTrace;
 using Common;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;

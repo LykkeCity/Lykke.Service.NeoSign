@@ -51,7 +51,7 @@ namespace Lykke.Service.NeoSign.Controllers
 
             catch (Exception e)
             {
-                return BadRequest(ErrorResponse.Create(e.Message));
+                return BadRequest(ErrorResponse.Create(e.ToAsyncString()));
             }
         }
     }

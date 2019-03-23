@@ -2,7 +2,7 @@
 using Common;
 using NeoModules.NEP6.Transactions;
 
-namespace Lykke.Service.NeoApi.Helpers.Transaction
+namespace Lykke.Service.NeoSign.Helpers.Transaction
 {
     public class WittnessContract
     {

@@ -26,7 +26,7 @@ namespace Lykke.Service.NeoSign.Helpers.Transaction
             }
             catch (Exception e) when(e is JsonReaderException || e is FormatException)
             {
-                throw new InvalidTransactionException();
+                throw new InvalidTransactionException(innerEx: e);
             }
         }
     }

@@ -33,6 +33,7 @@
     <PackageReference Include="NeoModules.NEP6" Version="0.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\Transaction\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">

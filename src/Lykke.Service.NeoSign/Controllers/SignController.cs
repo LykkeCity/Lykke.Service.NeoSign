@@ -5,7 +5,7 @@ using Common;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainApi.Contract.Transactions;
-using Lykke.Service.NeoApi.Helpers.Transaction;
+using Lykke.Service.NeoSign.Helpers.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using NeoModules.Core.KeyPair;
 using NeoModules.NEP6.Models;
@@ -26,7 +26,8 @@ namespace Lykke.Service.NeoSign.Controllers
 
             try
             {
-                var tx = TransactionSerializer.Deserialize(request.TransactionContext);
+                var txWrapper = TransactionSerializer.Deserialize(request.TransactionContext);
+                var tx = txWrapper.transaction;
 
                 var keyPair = new KeyPair(Wallet.GetPrivateKeyFromWif(request.PrivateKeys.Single()));
 
@@ -46,7 +47,7 @@ namespace Lykke.Service.NeoSign.Controllers
 
                 return Ok(new SignedTransactionResponse
                 {
-                    SignedTransaction = TransactionSerializer.Serialize(tx)
+                    SignedTransaction = TransactionSerializer.Serialize(tx, txWrapper.type)
                 });
             }
 
